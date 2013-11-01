@@ -16,7 +16,6 @@
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
 		instance = [[[self class] alloc] init];
-        HHLog(@"%@", [instance localizedStringForKey:@"UpdateMessage"]);
         instance.updateMessage = [NSString stringWithFormat:[instance localizedStringForKey:@"UpdateMessage"], [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"]];
         instance.notifyInterval = 3600 * 24;
 	});
