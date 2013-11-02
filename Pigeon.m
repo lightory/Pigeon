@@ -26,7 +26,7 @@
 {
     self.appleId = appleId;
     
-    // if (![self shouldCheck]) return;
+    if (![self shouldCheck]) return;
     
     if (!self.latestVersion) {
         dispatch_async(dispatch_queue_create("pigeon", NULL), ^{
