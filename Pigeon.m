@@ -28,10 +28,19 @@
     
     if (![self shouldCheck]) return;
     
-    // TODO: get latestVersion
-    
-    if ([self isLatestVersion]) return;
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scheduleUpdateNotification) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    if (!self.latestVersion) {
+        dispatch_async(dispatch_queue_create("pigeon", NULL), ^{
+            [self fetchLatestVersionFromAppStore];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if ([self isLatestVersion]) return;
+                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scheduleUpdateNotification) name:UIApplicationDidEnterBackgroundNotification object:nil];
+            });
+        });
+    } else {
+        if ([self isLatestVersion]) return;
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scheduleUpdateNotification) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    }
 }
 
 - (void)openInAppStore
@@ -42,7 +51,7 @@
     });
 }
 
-#pragma mark - Private
+#pragma mark
 - (BOOL)shouldCheck
 {
     NSTimeInterval currentTimeInterval = [[NSDate date] timeIntervalSince1970];
@@ -81,6 +90,18 @@
     localNotification.timeZone = [NSTimeZone defaultTimeZone];
     localNotification.alertBody = self.updateMessage;
     [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
+}
+
+- (void)fetchLatestVersionFromAppStore
+{
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://itunes.apple.com/lookup?id=%@", self.appleId]];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    NSData *response = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
+    NSDictionary *infoDic = [NSJSONSerialization JSONObjectWithData:response options:NSJSONReadingMutableLeaves error:nil];
+    
+    if (!infoDic[@"results"]) return;
+    if ([infoDic[@"results"] count] == 0) return;
+    self.latestVersion = infoDic[@"results"][0][@"version"];
 }
 
 #pragma mark - Localization
