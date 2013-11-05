@@ -54,6 +54,8 @@ The notify interval. Default values is one day.
 
 #### Who use Pigeon?
 
+Curs Valutar și Convertor: https://itunes.apple.com/us/app/curs-valutar-si-convertor/id548653222
+
 If you're building your applications using `Pigeon`, please let me know! (add your application name & App Store link here and pullreuqest this README~
 
 
