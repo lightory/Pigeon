@@ -2,16 +2,16 @@ Pigeon
 ======
 Library for checking new version from App Store, and notify user with local notifications.
 
-#### Features
+## Features
 - Just add 2 lines of code, and it works. VERY EASY TO USE.
 - Checking new version from App Store automatically. No server-side required.
 - Notify user after finish using the app. No Bother.
 
-#### Demo 
+## Demo 
 
 ![image](https://github.com/lightory/Pigeon/raw/master/Screenshot.png)
 
-#### Quick Example
+## Quick Example
 
 ``` objective-c
 @implementation AppDelegate
@@ -31,7 +31,7 @@ Library for checking new version from App Store, and notify user with local noti
 @end
 ```
 
-#### Customize
+## Customize
 
 You can also customize Pigeon as you wish. REMEMBER to set the customizable properties before you call `startWithAppleId:`;
 
@@ -52,14 +52,14 @@ The notify interval. Default values is one day.
 @property (assign, nonatomic) NSTimeInterval notifyInterval;
 ```
 
-#### Who use Pigeon?
+## Who use Pigeon?
 
-Curs Valutar și Convertor: https://itunes.apple.com/us/app/curs-valutar-si-convertor/id548653222
+If you're building your applications using `Pigeon`, please let me know! (add your application name & App Store link here and pull reuqest this README.
 
-If you're building your applications using `Pigeon`, please let me know! (add your application name & App Store link here and pullreuqest this README~
+- Curs Valutar și Convertor: https://itunes.apple.com/us/app/curs-valutar-si-convertor/id548653222
 
 
-#### License
+## License
 
 The MIT License (MIT)
 
