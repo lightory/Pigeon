@@ -114,7 +114,8 @@
 
 - (void)fetchLatestVersionFromAppStore
 {
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://itunes.apple.com/lookup?id=%@", self.appleId]];
+    NSString *countryCode = self.countyCode.length ? [self.countyCode stringByAppendingString:@"/"] : @"";
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://itunes.apple.com/%@lookup?id=%@", countryCode, self.appleId]];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     NSData *response = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
     NSDictionary *infoDic = [NSJSONSerialization JSONObjectWithData:response options:NSJSONReadingMutableLeaves error:nil];
