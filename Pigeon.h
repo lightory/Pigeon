@@ -23,6 +23,7 @@
 
 
 @interface Pigeon : NSObject
+@property (strong, nonatomic) NSString *countyCode;
 @property (strong, nonatomic) NSString *latestVersion;
 @property (strong, nonatomic) NSString *updateMessage;
 @property (assign, nonatomic) NSTimeInterval notifyInterval;

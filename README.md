@@ -40,10 +40,17 @@ Manage the `latestVersion` yourself, so `Pigeon` won't fetch it from App Store.
 ``` objective-c
 @property (strong, nonatomic) NSString *latestVersion;
 ```
+
 The message of local notification.
 
 ``` objective-c
 @property (strong, nonatomic) NSString *updateMessage;
+```
+
+The country code ( @"us", @"ru" for example ). You should set this code, if your application is not available in all countries. 
+
+``` objective-c
+@property (strong, nonatomic) NSString *countyCode;
 ```
 
 The notify interval. Default values is one day.
