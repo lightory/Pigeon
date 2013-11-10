@@ -66,7 +66,7 @@ The notify interval. Default values is one day.
 `Pigeon` will post a notification when finding a new version. You can observe it and notify users in the way you prefer, a UIAlertView for example.
 
 ``` objective-c
-[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showNewVersionAlertView) name:PigeonDidFindNewVersion object:nil];
+[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showNewVersionAlertView) name:PigeonDidFindNewVersionNotification object:nil];
 ```
 
 ## Who use Pigeon?

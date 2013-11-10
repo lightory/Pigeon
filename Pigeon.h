@@ -35,4 +35,4 @@
 @end
 
 
-static NSString *const PigeonDidFindNewVersion = @"PigeonDidFindNewVersion";
+static NSString *const PigeonDidFindNewVersionNotification = @"PigeonDidFindNewVersionNotification";

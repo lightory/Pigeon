@@ -52,12 +52,12 @@
         dispatch_async(dispatch_queue_create("Pigeon", NULL), ^{
             [self fetchLatestVersionFromAppStore];
             if (![self isLatestVersion]) {
-                [[NSNotificationCenter defaultCenter] postNotificationName:PigeonDidFindNewVersion object:nil];
+                [[NSNotificationCenter defaultCenter] postNotificationName:PigeonDidFindNewVersionNotification object:nil];
             }
         });
     } else {
         if (![self isLatestVersion]) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:PigeonDidFindNewVersion object:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:PigeonDidFindNewVersionNotification object:nil];
         }
     }
 }
@@ -119,7 +119,7 @@
 #pragma mark - Local Notification
 - (void)enableLocalNotification
 {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addObserverOnApplicationDidEnterBackground) name:PigeonDidFindNewVersion object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addObserverOnApplicationDidEnterBackground) name:PigeonDidFindNewVersionNotification object:nil];
 }
 
 - (void)addObserverOnApplicationDidEnterBackground
