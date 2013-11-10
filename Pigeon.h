@@ -29,6 +29,10 @@
 @property (assign, nonatomic) NSTimeInterval notifyInterval;
 
 + (instancetype)sharedInstance;
+- (void)enableLocalNotification;
 - (void)startWithAppleId:(NSString *)appleId;
 - (void)openInAppStore;
 @end
+
+
+static NSString *const PigeonDidFindNewVersion = @"PigeonDidFindNewVersion";

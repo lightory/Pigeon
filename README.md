@@ -1,11 +1,12 @@
 Pigeon
 ======
-Library for checking new version from App Store, and notify user with local notifications.
+Detect new version from App Store, and notify user with local notifications.
 
 ## Features
-- Just add 2 lines of code, and it works. VERY EASY TO USE.
-- Checking new version from App Store automatically. No server-side required.
+- Just add 3 lines of code, and it works. VERY EASY TO USE.
+- Detect new version from App Store automatically. No server-side required.
 - Notify user after finish using the app. No Bother.
+- Post a notification when finding a new version. You can observe it and notify users in the way you prefer, a UIAlertView for example.
 
 ## Demo 
 
@@ -18,6 +19,7 @@ Library for checking new version from App Store, and notify user with local noti
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [[Pigeon sharedInstance] enableLocalNotification];
     [[Pigeon sharedInstance] startWithAppleId:@"584296227"];
     
     return YES;
@@ -57,6 +59,14 @@ The notify interval. Default values is one day.
 
 ``` objective-c
 @property (assign, nonatomic) NSTimeInterval notifyInterval;
+```
+
+## One More Thing
+
+`Pigeon` will post a notification when finding a new version. You can observe it and notify users in the way you prefer, a UIAlertView for example.
+
+``` objective-c
+[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showNewVersionAlertView) name:PigeonDidFindNewVersion object:nil];
 ```
 
 ## Who use Pigeon?

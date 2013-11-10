@@ -49,26 +49,28 @@
     if (![self shouldCheck]) return;
     
     if (!self.latestVersion) {
-        dispatch_async(dispatch_queue_create("pigeon", NULL), ^{
+        dispatch_async(dispatch_queue_create("Pigeon", NULL), ^{
             [self fetchLatestVersionFromAppStore];
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if ([self isLatestVersion]) return;
-                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scheduleUpdateNotification) name:UIApplicationDidEnterBackgroundNotification object:nil];
-            });
+            if (![self isLatestVersion]) {
+                [[NSNotificationCenter defaultCenter] postNotificationName:PigeonDidFindNewVersion object:nil];
+            }
         });
     } else {
-        if ([self isLatestVersion]) return;
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scheduleUpdateNotification) name:UIApplicationDidEnterBackgroundNotification object:nil];
+        if (![self isLatestVersion]) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:PigeonDidFindNewVersion object:nil];
+        }
     }
 }
 
 - (void)openInAppStore
 {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        NSString *url = [NSString stringWithFormat:@"itms-apps://itunes.apple.com/app/id%@", self.appleId];
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
-    });
+    if (![NSThread isMainThread]) {
+        [self performSelectorOnMainThread:@selector(openInAppStore) withObject:nil waitUntilDone:YES];
+        return;
+    }
+    
+    NSString *url = [NSString stringWithFormat:@"itms-apps://itunes.apple.com/app/id%@", self.appleId];
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
 }
 
 #pragma mark
@@ -101,17 +103,6 @@
     return YES;
 }
 
-- (void)scheduleUpdateNotification
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
-    
-    UILocalNotification *localNotification = [[UILocalNotification alloc] init];
-    localNotification.fireDate = [[[NSDate alloc] init] dateByAddingTimeInterval:3];
-    localNotification.timeZone = [NSTimeZone defaultTimeZone];
-    localNotification.alertBody = self.updateMessage;
-    [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
-}
-
 - (void)fetchLatestVersionFromAppStore
 {
     NSString *countryCode = self.countyCode.length ? [self.countyCode stringByAppendingString:@"/"] : @"";
@@ -123,6 +114,28 @@
     if (!infoDic[@"results"]) return;
     if ([infoDic[@"results"] count] == 0) return;
     self.latestVersion = infoDic[@"results"][0][@"version"];
+}
+
+#pragma mark - Local Notification
+- (void)enableLocalNotification
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addObserverOnApplicationDidEnterBackground) name:PigeonDidFindNewVersion object:nil];
+}
+
+- (void)addObserverOnApplicationDidEnterBackground
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scheduleUpdateNotification) name:UIApplicationDidEnterBackgroundNotification object:nil];
+}
+
+- (void)scheduleUpdateNotification
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
+    
+    UILocalNotification *localNotification = [[UILocalNotification alloc] init];
+    localNotification.fireDate = [[[NSDate alloc] init] dateByAddingTimeInterval:3];
+    localNotification.timeZone = [NSTimeZone defaultTimeZone];
+    localNotification.alertBody = self.updateMessage;
+    [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
 }
 
 #pragma mark - Localization
