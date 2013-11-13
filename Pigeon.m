@@ -105,15 +105,19 @@
 
 - (void)fetchLatestVersionFromAppStore
 {
+    NSError *error = nil;
     NSString *countryCode = self.countyCode.length ? [self.countyCode stringByAppendingString:@"/"] : @"";
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://itunes.apple.com/%@lookup?id=%@", countryCode, self.appleId]];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    NSData *response = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
-    NSDictionary *infoDic = [NSJSONSerialization JSONObjectWithData:response options:NSJSONReadingMutableLeaves error:nil];
+    NSData *response = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:&error];
     
-    if (!infoDic[@"results"]) return;
-    if ([infoDic[@"results"] count] == 0) return;
-    self.latestVersion = infoDic[@"results"][0][@"version"];
+    if (response && !error) {
+        NSDictionary *infoDic = [NSJSONSerialization JSONObjectWithData:response options:NSJSONReadingMutableLeaves error:&error];
+        
+        if (!infoDic[@"results"]) return;
+        if ([infoDic[@"results"] count] == 0) return;
+        self.latestVersion = infoDic[@"results"][0][@"version"];
+    }
 }
 
 #pragma mark - Local Notification
